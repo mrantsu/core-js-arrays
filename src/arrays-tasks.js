@@ -275,8 +275,15 @@ function distinct(arr) {
  *    createNDimensionalArray(4, 2) => [[[[0, 0], [0, 0]], [[0, 0], [0, 0]]], [[[0, 0], [0, 0]], [[0, 0], [0, 0]]]]
  *    createNDimensionalArray(1, 1) => [0]
  */
-function createNDimensionalArray(/* n, size */) {
-  throw new Error('Not implemented');
+function createNDimensionalArray(n, size) {
+  if (n === 1) {
+    const baseArray = new Array(size).fill(0);
+    return baseArray;
+  }
+  const resultArray = new Array(size).fill(
+    createNDimensionalArray(n - 1, size)
+  );
+  return resultArray;
 }
 
 /**
@@ -348,8 +355,21 @@ function calculateBalance(arr) {
  *    createChunks(['a', 'b', 'c', 'd', 'e'], 2) => [['a', 'b'], ['c', 'd'], ['e']]
  *    createChunks([10, 20, 30, 40, 50], 1) => [[10], [20], [30], [40], [50]]
  */
-function createChunks(/* arr, chunkSize */) {
-  throw new Error('Not implemented');
+function createChunks(arr, chunkSize) {
+  let temp = [];
+  return arr.reduce((acc, item, index) => {
+    if ((index + 1) % chunkSize === 0) {
+      temp.push(item);
+      acc.push(temp);
+      temp = [];
+    } else if (index === arr.length - 1) {
+      temp.push(item);
+      acc.push(temp);
+    } else {
+      temp.push(item);
+    }
+    return acc;
+  }, []);
 }
 
 /**
@@ -466,8 +486,15 @@ function getIndicesOfOddNumbers(numbers) {
  *    getHexRGBValues([ 0, 255, 16777215]) => [ '#000000', '#0000FF', '#FFFFFF' ]
  *    getHexRGBValues([]) => []
  */
-function getHexRGBValues(/* arr */) {
-  throw new Error('Not implemented');
+function getHexRGBValues(arr) {
+  const convertToRGB = (num) => {
+    const numberToHex = num.toString(16).toUpperCase();
+    if (numberToHex.length === 6) return `#${numberToHex}`;
+    const hexColor = numberToHex.length === 1 ? `0${numberToHex}` : numberToHex;
+    return `#0000${hexColor}`;
+  };
+  if (arr.length === 0) return [];
+  return arr.map(convertToRGB);
 }
 
 /**
@@ -516,8 +543,23 @@ function findCommonElements(arr1, arr2) {
  *    findLongestIncreasingSubsequence([3, 10, 2, 1, 20]) => 2
  *    findLongestIncreasingSubsequence([50, 3, 10, 7, 40, 80]) => 3
  */
-function findLongestIncreasingSubsequence(/* nums */) {
-  throw new Error('Not implemented');
+function findLongestIncreasingSubsequence(nums) {
+  let temp = [];
+  const lastLongiestSubsequence = nums.reduce((acc, num, index) => {
+    if (nums[index + 1]) {
+      if (num > nums[index + 1]) {
+        acc.push(num);
+        temp = acc.length > temp.length ? acc : temp;
+        return [];
+      }
+      return acc.concat(num);
+    }
+    return acc.concat(num);
+  }, []);
+
+  return temp.length > lastLongiestSubsequence.length
+    ? temp.length
+    : lastLongiestSubsequence.length;
 }
 
 /**
@@ -551,8 +593,11 @@ function propagateItemsByPositionIndex(arr) {
  *    shiftArray(['a', 'b', 'c', 'd'], -1) => ['b', 'c', 'd', 'a']
  *    shiftArray([10, 20, 30, 40, 50], -3) => [40, 50, 10, 20, 30]
  */
-function shiftArray(/* arr, n */) {
-  throw new Error('Not implemented');
+function shiftArray(arr, n) {
+  const index = n < 1 ? Math.abs(n) : n + 1;
+  const partNeedToShift = arr.slice(0, index);
+  const restPart = arr.slice(index);
+  return restPart.concat(partNeedToShift);
 }
 
 /**
